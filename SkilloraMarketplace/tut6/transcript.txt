@@ -1,0 +1,40 @@
+# Tutorial 6 curl transcript
+
+# Create order (success)
+curl -i -X POST http://localhost:5000/orders \
+  -H "Authorization: Bearer demo" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: t6-1" \
+  -d '{"customerId":"C1","address":"Ahmedabad","items":[{"serviceId":"S1","qty":1}]}'
+
+# Repeat create order (idempotency)
+curl -i -X POST http://localhost:5000/orders \
+  -H "Authorization: Bearer demo" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: t6-1" \
+  -d '{"customerId":"C1","address":"Ahmedabad","items":[{"serviceId":"S1","qty":1}]}'
+
+# Create order with invalid items (failure)
+curl -i -X POST http://localhost:5000/orders \
+  -H "Authorization: Bearer demo" \
+  -H "Content-Type: application/json" \
+  -d '{"customerId":"C1","address":"Ahmedabad","items":[]}'
+
+# Read unknown order (404)
+curl -i http://localhost:5000/orders/UNKNOWN \
+  -H "Authorization: Bearer demo"
+
+# Update order with stale If-Match (412)
+curl -i -X PATCH http://localhost:5000/orders/ORD-ID \
+  -H "Authorization: Bearer demo" \
+  -H "Content-Type: application/json" \
+  -H 'If-Match: "stale"' \
+  -d '{"status":"confirmed"}'
+
+# Request XML (406 Not Acceptable)
+curl -i http://localhost:5000/orders/ORD-ID \
+  -H "Authorization: Bearer demo" \
+  -H "Accept: application/xml"
+
+# Read order without Authorization (401)
+curl -i http://localhost:5000/orders/ORD-ID

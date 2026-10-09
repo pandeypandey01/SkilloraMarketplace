@@ -1,0 +1,12 @@
+flowchart LR
+    Identity[Identity<br/>users, addresses]
+    Catalogue[Catalogue<br/>categories, services]
+    Orders[Orders<br/>orders, order_items]
+    Payments[Payments<br/>payments, refunds]
+    Notifications[Notifications<br/>notifications]
+
+    Orders -->|validateUser| Identity
+    Orders -->|checkService| Catalogue
+    Orders -->|authorize| Payments
+    Orders -->|sendNotification| Notifications
+    Payments -->|sendNotification| Notifications

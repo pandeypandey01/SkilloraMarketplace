@@ -1,0 +1,39 @@
+# Skillora Tutorial 4 — curl transcript
+# Run the following commands against the local service.
+# Replace ORD-ID after the first successful response.
+
+curl -i -X POST http://localhost:5000/orders ^
+  -H "Authorization: Bearer demo" ^
+  -H "Content-Type: application/json" ^
+  -H "Idempotency-Key: demo-100" ^
+  -d "{"customerId":"C1","address":"Ahmedabad","items":[{"serviceId":"S1","qty":1}]}"
+
+curl -i -X POST http://localhost:5000/orders ^
+  -H "Authorization: Bearer demo" ^
+  -H "Content-Type: application/json" ^
+  -H "Idempotency-Key: demo-100" ^
+  -d "{"customerId":"C1","address":"Ahmedabad","items":[{"serviceId":"S1","qty":1}]}"
+
+curl -i http://localhost:5000/orders/ORD-ID ^
+  -H "Authorization: Bearer demo"
+
+# Use the ETag from the previous response.
+curl -i http://localhost:5000/orders/ORD-ID ^
+  -H "Authorization: Bearer demo" ^
+  -H "If-None-Match: "order-ORD-ID-v1""
+
+curl -i -X PATCH http://localhost:5000/orders/ORD-ID ^
+  -H "Authorization: Bearer demo" ^
+  -H "Content-Type: application/json" ^
+  -H "If-Match: "stale-etag"" ^
+  -d "{"status":"confirmed"}"
+
+curl -i -X POST http://localhost:5000/orders ^
+  -H "Authorization: Bearer demo" ^
+  -H "Content-Type: application/json" ^
+  -d "{"customerId":"C1","address":"Ahmedabad","items":[{"serviceId":"S1","qty":0}]}"
+
+curl -i http://localhost:5000/orders/UNKNOWN ^
+  -H "Authorization: Bearer demo"
+
+curl -i http://localhost:5000/orders/ORD-ID

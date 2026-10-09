@@ -1,0 +1,50 @@
+# Run with curl -v.
+# The commands below cover the required successful and failure paths.
+
+# Create order (success)
+curl -v -X POST http://localhost:5000/orders \
+  -H "Authorization: Bearer demo" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: t5-1" \
+  -d '{"customerId":"C1","address":"Ahmedabad","items":[{"serviceId":"S1","qty":1}]}'
+
+# Repeat create order (idempotency)
+curl -v -X POST http://localhost:5000/orders \
+  -H "Authorization: Bearer demo" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: t5-1" \
+  -d '{"customerId":"C1","address":"Ahmedabad","items":[{"serviceId":"S1","qty":1}]}'
+
+# Read order
+curl -v http://localhost:5000/orders/ORD-ID \
+  -H "Authorization: Bearer demo"
+
+# Read order with If-None-Match (ETag)
+curl -v http://localhost:5000/orders/ORD-ID \
+  -H "Authorization: Bearer demo" \
+  -H 'If-None-Match: "order-ORD-ID-v1"'
+
+# Update order with stale If-Match
+curl -v -X PATCH http://localhost:5000/orders/ORD-ID \
+  -H "Authorization: Bearer demo" \
+  -H "Content-Type: application/json" \
+  -H 'If-Match: "stale"' \
+  -d '{"status":"confirmed"}'
+
+# Create order with invalid qty (failure)
+curl -v -X POST http://localhost:5000/orders \
+  -H "Authorization: Bearer demo" \
+  -H "Content-Type: application/json" \
+  -d '{"customerId":"C1","address":"Ahmedabad","items":[{"serviceId":"S1","qty":0}]}'
+
+# Read unknown order (404)
+curl -v http://localhost:5000/orders/UNKNOWN \
+  -H "Authorization: Bearer demo"
+
+# Read order without Authorization (401)
+curl -v http://localhost:5000/orders/ORD-ID
+
+# Cancel order
+curl -v -X POST http://localhost:5000/orders/ORD-ID/cancellation \
+  -H "Authorization: Bearer demo"
+

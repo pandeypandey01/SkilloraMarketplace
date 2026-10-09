@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:pay="urn:Skillora:SecurePay">
+  <soap:Body>
+    <pay:chargeResponse>
+      <pay:transactionId>TXN-7001</pay:transactionId>
+      <pay:status>APPROVED</pay:status>
+    </pay:chargeResponse>
+  </soap:Body>
+</soap:Envelope>
