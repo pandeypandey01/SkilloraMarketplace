@@ -4,8 +4,7 @@
 Skillora is a marketplace where students can offer useful skills and other users can hire them.  
 Example workflow: a customer needs a logo → finds a student designer → books the service → pays → receives the work → leaves a review.  
 
-The platform connects **customers**, **student service providers**, and **administrators** in one system.  
-Designed as a **Software Engineering + Web Services project** for a 5‑member team over 2 months.
+The platform connects **customers**, **student service providers**, and **administrators** in one system.
 
 ---
 
